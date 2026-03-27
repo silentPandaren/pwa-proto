@@ -3,37 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0e0e10">
+  <meta name="theme-color" content="#0a0a0a">
   <link rel="manifest" href="/manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Webshop">
+  <meta name="apple-mobile-web-app-title" content="Market">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
-  <title>PWA Webshop</title>
+  <title>Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 
 <header>
-  <div class="header-logo">🛍</div>
-  <div class="header-title">
-    <strong>Webshop</strong>
-    <span>Official hub</span>
+  <a href="/" class="header-logo">Market</a>
+  <nav class="header-nav">
+    <a href="/" class="nav-link active">Home</a>
+    <a href="#" class="nav-link">Games</a>
+    <a href="#" class="nav-link">Library</a>
+    <a href="#" class="nav-link">Market</a>
+    <a href="#" class="nav-link">About</a>
+  </nav>
+  <div class="header-actions">
+    <a href="/cart.html" id="cart-link">🛒 Cart <span id="cart-badge">0</span></a>
+    <button id="install-btn" hidden>⬇ Install Launcher</button>
   </div>
-  <a href="/cart.html" id="cart-link">🛒 Cart <span id="cart-badge">0</span></a>
-  <button id="install-btn" hidden>⬇ Install</button>
 </header>
 
-<div id="filter-bar">
-  <button class="filter-btn active" data-filter="all">All items</button>
-  <button class="filter-btn" data-filter="limited">Limited edition</button>
-  <button class="filter-btn" data-filter="popular">Most popular</button>
-  <div id="filter-right">
+<div class="filter-section">
+  <div class="filter-tags">
+    <button class="tag-btn active" data-filter="all">All items</button>
+    <button class="tag-btn" data-filter="limited">Limited edition</button>
+    <button class="tag-btn" data-filter="popular">Most popular</button>
+  </div>
+  <div class="filter-right">
+    <select id="sort-select">
+      <option>Most popular</option>
+      <option>Price: low to high</option>
+      <option>Price: high to low</option>
+    </select>
     <input id="search-input" type="search" placeholder="🔍 Search">
   </div>
 </div>
 
-<div id="section-title">Items</div>
+<div class="section-heading">Top Sellers</div>
 
 <main id="product-grid"></main>
 

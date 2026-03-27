@@ -3,19 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#2563eb">
+  <meta name="theme-color" content="#0a0a0a">
   <link rel="manifest" href="/manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Webshop">
+  <meta name="apple-mobile-web-app-title" content="Market">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
-  <title>Cart — PWA Webshop</title>
+  <title>Cart — Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 
 <header>
-  <h1><a href="/">Webshop</a></h1>
-  <a href="/cart.html" id="cart-link">🛒 Cart <span id="cart-badge">0</span></a>
+  <a href="/" class="header-logo">Market</a>
+  <nav class="header-nav">
+    <a href="/" class="nav-link">Home</a>
+    <a href="#" class="nav-link">Games</a>
+    <a href="#" class="nav-link">Library</a>
+    <a href="#" class="nav-link">Market</a>
+    <a href="#" class="nav-link">About</a>
+  </nav>
+  <div class="header-actions">
+    <a href="/cart.html" id="cart-link">🛒 Cart <span id="cart-badge">0</span></a>
+  </div>
 </header>
 
 <div class="cart-container">

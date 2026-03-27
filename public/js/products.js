@@ -69,29 +69,29 @@ function renderCatalog() {
   }
 
   grid.innerHTML = products.map((p) => {
-    const labelBadge = p.badge === 'limited'
-      ? '<span class="badge-label badge-limited">Limited Edition</span>'
-      : p.badge === 'popular'
-        ? '<span class="badge-label badge-popular">Most Popular</span>'
-        : '';
+    const tags = [];
+    if (p.badge === 'limited') tags.push('<span class="tag tag-white">Limited</span>');
+    if (p.badge === 'popular') tags.push('<span class="tag tag-green">Popular</span>');
+    if (p.offer)  tags.push('<span class="tag tag-orange">Offer</span>');
+    if (p.bonus)  tags.push(`<span class="tag tag-blue">${p.bonus}</span>`);
+    const tagsHtml = tags.length ? `<div class="card-tags">${tags.join('')}</div>` : '';
 
-    const rightBadge = p.offer && p.multiplier
-      ? `<div class="badge-offer-banner">One-Time Offer</div>
-         <span class="badge-multiplier">${p.multiplier}</span>`
-      : p.bonus
-        ? `<span class="badge-bonus">${p.bonus}</span>`
-        : '';
+    const multiplierHtml = p.multiplier
+      ? `<div class="card-multiplier">${p.multiplier}</div>`
+      : '';
 
     return `
       <article class="product-card" onclick="addToCart('${p.id}','${p.name}',${p.price})">
-        <div class="card-image">
-          ${rightBadge}
-          ${labelBadge}
+        <div class="card-cover">
           <span>${p.emoji}</span>
+          ${tagsHtml}
+          ${multiplierHtml}
         </div>
         <div class="card-body">
           <div class="card-name">${p.name}</div>
-          <button class="card-price-btn">$${p.price.toFixed(2)}</button>
+          <div class="card-price-row">
+            <button class="card-buy-btn${p.offer ? ' green' : ''}">€${p.price.toFixed(2)}</button>
+          </div>
         </div>
       </article>`;
   }).join('');
@@ -99,7 +99,7 @@ function renderCatalog() {
 
 function setFilter(filter) {
   activeFilter = filter;
-  document.querySelectorAll('.filter-btn').forEach((btn) => {
+  document.querySelectorAll('.tag-btn').forEach((btn) => {
     btn.classList.toggle('active', btn.dataset.filter === filter);
   });
   renderCatalog();
@@ -108,7 +108,7 @@ function setFilter(filter) {
 document.addEventListener('DOMContentLoaded', () => {
   renderCatalog();
 
-  document.querySelectorAll('.filter-btn').forEach((btn) => {
+  document.querySelectorAll('.tag-btn').forEach((btn) => {
     btn.addEventListener('click', () => setFilter(btn.dataset.filter));
   });
 
