@@ -21,15 +21,21 @@ const isStandalone = window.navigator.standalone === true
   || window.matchMedia('(display-mode: standalone)').matches
   || new URLSearchParams(window.location.search).get('source') === 'pwa';
 
-// iOS: show banner immediately (no beforeinstallprompt on iOS)
-if (isIOS && !isStandalone) {
-  if (installBanner) installBanner.hidden = false;
+function maybeShowInstallBanner() {
+  if (isStandalone) return;
+  if (isIOS) {
+    if (installBanner) installBanner.hidden = false;
+  } else if (deferredInstallPrompt) {
+    if (installBanner) installBanner.hidden = false;
+  }
 }
 
+// iOS: no beforeinstallprompt — banner shown via maybeShowInstallBanner after push flow
 window.addEventListener('beforeinstallprompt', (event) => {
   event.preventDefault();
   deferredInstallPrompt = event;
-  if (!isStandalone && installBanner) installBanner.hidden = false;
+  // Only show immediately if push banner is not showing
+  if (pushBanner?.hidden !== false) maybeShowInstallBanner();
 });
 
 installBtn?.addEventListener('click', async () => {
@@ -67,72 +73,50 @@ window.addEventListener('appinstalled', () => {
   if (installBanner) installBanner.hidden = true;
 });
 
-// ── PUSH BUTTON WIRING ────────────────────────────────────────────────────────
-const subscribeBtn = document.getElementById('subscribe-btn');
-const unsubscribeBtn = document.getElementById('unsubscribe-btn');
+// ── PUSH BANNER ───────────────────────────────────────────────────────────────
+const pushBanner    = document.getElementById('push-banner');
+const pushAllowBtn  = document.getElementById('push-allow-btn');
+const pushLaterBtn  = document.getElementById('push-later-btn');
 
-async function initPushButtons() {
-  if (!subscribeBtn && !unsubscribeBtn) return;
+function shouldShowPushBanner() {
+  if (!('Notification' in window)) return false;
+  if (Notification.permission !== 'default') return false;
+  if (sessionStorage.getItem('push_later')) return false;
+  return true;
+}
 
+function hidePushBanner() {
+  if (pushBanner) pushBanner.hidden = true;
+  // Show install banner now if it's waiting
+  maybeShowInstallBanner();
+}
+
+pushAllowBtn?.addEventListener('click', async () => {
+  pushAllowBtn.disabled = true;
+  pushAllowBtn.textContent = 'Connecting…';
   try {
     await loadVapidKey();
-  } catch (err) {
-    console.warn('Could not load VAPID key:', err);
-    return;
-  }
-
-  const existingSub = await getExistingSubscription();
-  if (existingSub) {
-    subscribeBtn.hidden = true;
-    unsubscribeBtn.hidden = false;
-  }
-
-  subscribeBtn?.addEventListener('click', async () => {
-    subscribeBtn.disabled = true;
-    subscribeBtn.textContent = 'Subscribing…';
     const sub = await subscribeToPush();
-    if (sub) {
-      subscribeBtn.hidden = true;
-      unsubscribeBtn.hidden = false;
-      showToast('Notifications enabled');
-    } else {
-      subscribeBtn.disabled = false;
-      subscribeBtn.textContent = '🔔 Enable Notifications';
-    }
-  });
+    if (sub) showToast('Notifications enabled');
+  } catch {
+    showToast('Could not enable notifications');
+  }
+  hidePushBanner();
+});
 
-  unsubscribeBtn?.addEventListener('click', async () => {
-    await unsubscribeFromPush();
-    unsubscribeBtn.hidden = true;
-    subscribeBtn.hidden = false;
-    subscribeBtn.disabled = false;
-    subscribeBtn.textContent = '🔔 Enable Notifications';
-    showToast('Notifications disabled');
-  });
-}
+pushLaterBtn?.addEventListener('click', () => {
+  sessionStorage.setItem('push_later', '1');
+  hidePushBanner();
+});
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.ready.then(() => {
-    initPushButtons();
-    autoRequestPushIfNeeded();
+    if (shouldShowPushBanner()) {
+      setTimeout(() => {
+        if (pushBanner) pushBanner.hidden = false;
+      }, 1500);
+    } else {
+      maybeShowInstallBanner();
+    }
   });
-}
-
-// ── AUTO PUSH REQUEST (first PWA launch, non-iOS only) ────────────────────────
-async function autoRequestPushIfNeeded() {
-  if (isIOS) return;                                      // iOS requires user gesture
-  if (!isStandalone) return;                              // only in PWA mode
-  if (Notification.permission !== 'default') return;     // already granted or denied
-  if (localStorage.getItem('push_asked')) return;        // already asked before
-
-  localStorage.setItem('push_asked', '1');
-
-  try {
-    await loadVapidKey();
-  } catch {
-    return;
-  }
-
-  const sub = await subscribeToPush();
-  if (sub) showToast('Notifications enabled');
 }

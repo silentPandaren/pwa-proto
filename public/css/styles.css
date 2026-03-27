@@ -651,6 +651,29 @@ a.btn-primary, button.btn-primary {
 }
 .install-banner-btn:hover { background: var(--primary-dark); }
 
+.push-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.push-later-btn {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  padding: 0 16px;
+  height: 38px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.push-later-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.25); }
+
 .install-banner-close {
   background: none;
   border: none;

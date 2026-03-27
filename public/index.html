@@ -53,9 +53,16 @@
 
 <main id="product-grid"></main>
 
-<div id="push-controls">
-  <button id="subscribe-btn">🔔 Enable Notifications</button>
-  <button id="unsubscribe-btn" hidden>🔕 Disable Notifications</button>
+<div id="push-banner" hidden>
+  <img src="/images/showcase_logo.png" class="install-banner-logo" alt="">
+  <div class="install-banner-text">
+    <strong>Be first to know</strong>
+    <span>Allow notifications — get exclusive deals and new offers before anyone else</span>
+  </div>
+  <div class="push-banner-actions">
+    <button class="install-banner-btn" id="push-allow-btn">Allow</button>
+    <button class="push-later-btn" id="push-later-btn">Ask me later</button>
+  </div>
 </div>
 
 <div id="ios-install-modal" hidden>
