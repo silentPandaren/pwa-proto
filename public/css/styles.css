@@ -482,6 +482,113 @@ a.btn-primary, button.btn-primary {
 .status-processing { background: rgba(249,115,22,0.15); color: #fb923c; }
 .status-delivered  { background: rgba(0,90,255,0.15);   color: #005aff; }
 
+/* ── IOS INSTALL MODAL ───────────────────────────────────────────────── */
+.ios-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 299;
+}
+
+.ios-modal-box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 300;
+  background: #1a1a1a;
+  border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  padding: 28px 24px 40px;
+  animation: slideUp 0.3s ease;
+}
+
+.ios-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.ios-modal-close:hover { background: rgba(255,255,255,0.14); }
+
+.ios-modal-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background: var(--surface);
+}
+.ios-modal-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.ios-modal-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.ios-modal-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.ios-modal-steps {
+  list-style: none;
+  counter-reset: steps;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ios-modal-steps li {
+  counter-increment: steps;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+.ios-modal-steps li::before {
+  content: counter(steps);
+  background: var(--primary);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.ios-share-icon {
+  display: inline-block;
+  font-family: -apple-system, sans-serif;
+  font-size: 1.1rem;
+  vertical-align: middle;
+  margin: 0 2px;
+}
+
 /* ── INSTALL BANNER ──────────────────────────────────────────────────── */
 #install-banner {
   position: fixed;

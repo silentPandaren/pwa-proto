@@ -16,6 +16,14 @@ const installBanner = document.getElementById('install-banner');
 const installBtn    = document.getElementById('install-btn');
 const installClose  = document.getElementById('install-close');
 
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+const isStandalone = window.navigator.standalone === true;
+
+// iOS: show banner immediately (no beforeinstallprompt on iOS)
+if (isIOS && !isStandalone) {
+  if (installBanner) installBanner.hidden = false;
+}
+
 window.addEventListener('beforeinstallprompt', (event) => {
   event.preventDefault();
   deferredInstallPrompt = event;
@@ -23,6 +31,12 @@ window.addEventListener('beforeinstallprompt', (event) => {
 });
 
 installBtn?.addEventListener('click', async () => {
+  if (isIOS) {
+    // Show manual instructions for iOS
+    const modal = document.getElementById('ios-install-modal');
+    if (modal) modal.hidden = false;
+    return;
+  }
   if (!deferredInstallPrompt) return;
   deferredInstallPrompt.prompt();
   const { outcome } = await deferredInstallPrompt.userChoice;
@@ -33,6 +47,16 @@ installBtn?.addEventListener('click', async () => {
 
 installClose?.addEventListener('click', () => {
   if (installBanner) installBanner.hidden = true;
+});
+
+// iOS modal close
+document.getElementById('ios-modal-close')?.addEventListener('click', () => {
+  const modal = document.getElementById('ios-install-modal');
+  if (modal) modal.hidden = true;
+});
+document.getElementById('ios-modal-backdrop')?.addEventListener('click', () => {
+  const modal = document.getElementById('ios-install-modal');
+  if (modal) modal.hidden = true;
 });
 
 window.addEventListener('appinstalled', () => {
