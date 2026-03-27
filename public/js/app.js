@@ -112,5 +112,27 @@ async function initPushButtons() {
 }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.ready.then(() => initPushButtons());
+  navigator.serviceWorker.ready.then(() => {
+    initPushButtons();
+    autoRequestPushIfNeeded();
+  });
+}
+
+// ── AUTO PUSH REQUEST (first PWA launch, non-iOS only) ────────────────────────
+async function autoRequestPushIfNeeded() {
+  if (isIOS) return;                                      // iOS requires user gesture
+  if (!isStandalone) return;                              // only in PWA mode
+  if (Notification.permission !== 'default') return;     // already granted or denied
+  if (localStorage.getItem('push_asked')) return;        // already asked before
+
+  localStorage.setItem('push_asked', '1');
+
+  try {
+    await loadVapidKey();
+  } catch {
+    return;
+  }
+
+  const sub = await subscribeToPush();
+  if (sub) showToast('Notifications enabled');
 }
