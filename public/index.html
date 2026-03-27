@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#2563eb">
+  <meta name="theme-color" content="#0e0e10">
   <link rel="manifest" href="/manifest.json">
-  <!-- iOS Safari fallbacks -->
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Webshop">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
   <title>PWA Webshop</title>
@@ -16,10 +15,25 @@
 <body>
 
 <header>
-  <h1>Webshop</h1>
+  <div class="header-logo">🛍</div>
+  <div class="header-title">
+    <strong>Webshop</strong>
+    <span>Official hub</span>
+  </div>
   <a href="/cart.html" id="cart-link">🛒 Cart <span id="cart-badge">0</span></a>
-  <button id="install-btn" hidden>⬇ Install App</button>
+  <button id="install-btn" hidden>⬇ Install</button>
 </header>
+
+<div id="filter-bar">
+  <button class="filter-btn active" data-filter="all">All items</button>
+  <button class="filter-btn" data-filter="limited">Limited edition</button>
+  <button class="filter-btn" data-filter="popular">Most popular</button>
+  <div id="filter-right">
+    <input id="search-input" type="search" placeholder="🔍 Search">
+  </div>
+</div>
+
+<div id="section-title">Items</div>
 
 <main id="product-grid"></main>
 
