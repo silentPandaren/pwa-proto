@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Webshop">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <title>Orders — PWA Webshop</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<header>
+  <h1><a href="/">Webshop</a></h1>
+  <a href="/cart.html" id="cart-link">🛒 Cart <span id="cart-badge">0</span></a>
+</header>
+
+<div class="orders-container">
+  <h2 style="margin-bottom:1rem">My Orders</h2>
+  <div id="orders-list"></div>
+
+  <!-- Push demo panel -->
+  <div style="margin-top:2rem;padding:1.25rem;background:white;border:1px solid var(--border);border-radius:0.875rem">
+    <h3 style="margin-bottom:0.5rem;font-size:0.95rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em">Push Notification Demo</h3>
+    <p style="font-size:0.875rem;color:var(--text-muted);margin-bottom:1rem">
+      Trigger a push from the server to all subscribed browsers.
+      <br>First enable notifications on the main page.
+    </p>
+    <div style="display:flex;flex-wrap:wrap;gap:0.5rem">
+      <button class="btn-primary" onclick="sendPush('order_shipped')">📦 Order Shipped</button>
+      <button class="btn-primary" onclick="sendPush('promo')" style="background:#7c3aed">🏷 Promo 20% off</button>
+      <button class="btn-primary" onclick="sendPush('back_in_stock')" style="background:#059669">✅ Back in Stock</button>
+    </div>
+    <div id="push-result" style="margin-top:0.75rem;font-size:0.8rem;color:var(--text-muted)"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="/js/cart.js"></script>
+<script>
+  // Demo orders (in a real app these would come from the server)
+  const DEMO_ORDERS = [
+    { id: '#10042', date: 'Mar 24, 2026', status: 'shipped',    items: 'Wireless Headphones × 1', total: '$79.99' },
+    { id: '#10038', date: 'Mar 19, 2026', status: 'delivered',  items: 'USB-C Hub × 2',          total: '$99.98' },
+    { id: '#10031', date: 'Mar 10, 2026', status: 'processing', items: 'Mechanical Keyboard × 1', total: '$129.99' },
+  ];
+
+  const STATUS_LABELS = {
+    shipped:    { label: 'Shipped',    cls: 'status-shipped' },
+    delivered:  { label: 'Delivered',  cls: 'status-delivered' },
+    processing: { label: 'Processing', cls: 'status-processing' },
+  };
+
+  function renderOrders() {
+    const container = document.getElementById('orders-list');
+
+    // If we just came from placing an order, prepend a fresh one
+    const params = new URLSearchParams(window.location.search);
+    let orders = [...DEMO_ORDERS];
+    if (params.get('new') === '1') {
+      const newOrder = {
+        id: '#' + (10043 + Math.floor(Math.random() * 10)),
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        status: 'processing',
+        items: 'New order',
+        total: '$—'
+      };
+      orders = [newOrder, ...orders];
+    }
+
+    container.innerHTML = orders.map((o) => {
+      const s = STATUS_LABELS[o.status];
+      return `
+        <div class="order-card">
+          <div class="order-header">
+            <div>
+              <div class="order-id">${o.id}</div>
+              <div class="order-date">${o.date}</div>
+            </div>
+            <span class="status-badge ${s.cls}">${s.label}</span>
+          </div>
+          <div style="font-size:0.875rem;color:var(--text-muted)">${o.items}</div>
+          <div style="font-weight:600;margin-top:0.25rem">${o.total}</div>
+        </div>`;
+    }).join('');
+  }
+
+  const PUSH_PRESETS = {
+    order_shipped:  { title: 'Order Shipped! 📦', body: 'Your Wireless Headphones are on their way.', url: '/orders.html' },
+    promo:          { title: '20% off today only 🏷', body: 'Use code SAVE20 at checkout. Limited time!', url: '/' },
+    back_in_stock:  { title: 'Back in Stock ✅', body: 'Mechanical Keyboard is available again.', url: '/' },
+  };
+
+  async function sendPush(preset) {
+    const result = document.getElementById('push-result');
+    result.textContent = 'Sending…';
+    try {
+      const res = await fetch('/send-push', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(PUSH_PRESETS[preset])
+      });
+      const data = await res.json();
+      if (data.error) {
+        result.textContent = `Error: ${data.error}. Subscribe to notifications first.`;
+      } else {
+        result.textContent = `Sent to ${data.sent} subscriber(s).`;
+      }
+    } catch (err) {
+      result.textContent = 'Request failed: ' + err.message;
+    }
+  }
+
+  renderOrders();
+</script>
+</body>
+</html>

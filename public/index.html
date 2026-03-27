@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="/manifest.json">
+  <!-- iOS Safari fallbacks -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Webshop">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <title>PWA Webshop</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<header>
+  <h1>Webshop</h1>
+  <a href="/cart.html" id="cart-link">🛒 Cart <span id="cart-badge">0</span></a>
+  <button id="install-btn" hidden>⬇ Install App</button>
+</header>
+
+<main id="product-grid"></main>
+
+<div id="push-controls">
+  <button id="subscribe-btn">🔔 Enable Notifications</button>
+  <button id="unsubscribe-btn" hidden>🔕 Disable Notifications</button>
+</div>
+
+<div id="toast"></div>
+
+<script src="/js/products.js"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/push.js"></script>
+<script src="/js/app.js"></script>
+
+</body>
+</html>
