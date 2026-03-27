@@ -21,21 +21,15 @@ const isStandalone = window.navigator.standalone === true
   || window.matchMedia('(display-mode: standalone)').matches
   || new URLSearchParams(window.location.search).get('source') === 'pwa';
 
-function maybeShowInstallBanner() {
-  if (isStandalone) return;
-  if (isIOS) {
-    if (installBanner) installBanner.hidden = false;
-  } else if (deferredInstallPrompt) {
-    if (installBanner) installBanner.hidden = false;
-  }
+// iOS: show install banner immediately (no beforeinstallprompt)
+if (isIOS && !isStandalone) {
+  if (installBanner) installBanner.hidden = false;
 }
 
-// iOS: no beforeinstallprompt — banner shown via maybeShowInstallBanner after push flow
 window.addEventListener('beforeinstallprompt', (event) => {
   event.preventDefault();
   deferredInstallPrompt = event;
-  // Only show immediately if push banner is not showing
-  if (pushBanner?.hidden !== false) maybeShowInstallBanner();
+  if (!isStandalone && installBanner) installBanner.hidden = false;
 });
 
 installBtn?.addEventListener('click', async () => {
@@ -79,16 +73,11 @@ const pushAllowBtn  = document.getElementById('push-allow-btn');
 const pushLaterBtn  = document.getElementById('push-later-btn');
 
 function shouldShowPushBanner() {
+  if (!isStandalone) return false;                        // only in PWA
   if (!('Notification' in window)) return false;
   if (Notification.permission !== 'default') return false;
   if (sessionStorage.getItem('push_later')) return false;
   return true;
-}
-
-function hidePushBanner() {
-  if (pushBanner) pushBanner.hidden = true;
-  // Show install banner now if it's waiting
-  maybeShowInstallBanner();
 }
 
 pushAllowBtn?.addEventListener('click', async () => {
@@ -101,12 +90,12 @@ pushAllowBtn?.addEventListener('click', async () => {
   } catch {
     showToast('Could not enable notifications');
   }
-  hidePushBanner();
+  if (pushBanner) pushBanner.hidden = true;
 });
 
 pushLaterBtn?.addEventListener('click', () => {
   sessionStorage.setItem('push_later', '1');
-  hidePushBanner();
+  if (pushBanner) pushBanner.hidden = true;
 });
 
 if ('serviceWorker' in navigator) {
@@ -115,8 +104,6 @@ if ('serviceWorker' in navigator) {
       setTimeout(() => {
         if (pushBanner) pushBanner.hidden = false;
       }, 1500);
-    } else {
-      maybeShowInstallBanner();
     }
   });
 }
