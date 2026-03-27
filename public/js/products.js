@@ -1,58 +1,48 @@
 const PRODUCTS = [
   {
-    id: 'p1', name: '100 + 150 D-Gems', price: 1.09, emoji: '💎',
-    badge: 'limited', offer: true, multiplier: 'x2.5'
+    id: 'p1',  name: '100 + 150 D-Gems',    price: 1.09,   image: 'd_gems_small',  emoji: '💎', badge: 'limited', offer: true
   },
   {
-    id: 'p2', name: '500 + 500 D-Gems', price: 4.99, emoji: '💎',
-    badge: 'limited', offer: true, multiplier: 'x2'
+    id: 'p2',  name: '500 + 500 D-Gems',    price: 4.99,   image: 'd_gems_small',  emoji: '💎', badge: 'limited', offer: true
   },
   {
-    id: 'p3', name: '1500 + 75 D-Gems', price: 15.99, emoji: '💎',
-    badge: 'popular', bonus: '+5%'
+    id: 'p3',  name: '1500 + 75 D-Gems',    price: 15.99,  image: 'd_gems_medium', emoji: '💎', badge: 'popular'
   },
   {
-    id: 'p4', name: '30000 + 1500 D-Gems', price: 314.99, emoji: '💎',
-    bonus: '+5%'
+    id: 'p7',  name: '2500 + 125 D-Gems',   price: 25.99,  image: 'd_gems_medium', emoji: '💎', bonus: '+5%'
   },
   {
-    id: 'p5', name: '10000 + 500 D-Gems', price: 104.99, emoji: '💎',
-    bonus: '+5%'
+    id: 'p6',  name: '4500 + 225 D-Gems',   price: 45.99,  image: 'd_gems_big',    emoji: '💎', bonus: '+5%'
   },
   {
-    id: 'p6', name: '4500 + 225 D-Gems', price: 45.99, emoji: '💎',
-    bonus: '+5%'
+    id: 'p5',  name: '10000 + 500 D-Gems',  price: 104.99, image: 'd_gems_big',    emoji: '💎', bonus: '+5%'
   },
   {
-    id: 'p7', name: '2500 + 125 D-Gems', price: 25.99, emoji: '💎',
-    bonus: '+5%'
+    id: 'p4',  name: '30000 + 1500 D-Gems', price: 314.99, image: 'd_gems_big',    emoji: '💎', bonus: '+5%'
   },
   {
-    id: 'p8', name: '750 + 37 D-Gems', price: 7.99, emoji: '💎',
-    bonus: '+5%'
+    id: 'p8',  name: '750 + 37 D-Gems',     price: 7.99,   image: 'd_gems_small',  emoji: '💎', bonus: '+5%'
   },
   {
-    id: 'p9', name: '500 D-Gems', price: 4.99, emoji: '💎'
+    id: 'p9',  name: '500 D-Gems',          price: 4.99,   image: 'd_gems_small',  emoji: '💎'
   },
   {
-    id: 'p10', name: '250 D-Gems', price: 2.59, emoji: '💎'
+    id: 'p10', name: '250 D-Gems',          price: 2.59,   image: 'd_gems_small',  emoji: '💎'
   },
   {
-    id: 'p11', name: '30 days Premium', price: 15.99, emoji: '👑'
+    id: 'p11', name: '30 days Premium',     price: 15.99,  image: 'premium',       emoji: '👑'
   },
   {
-    id: 'p12', name: '10 days Premium', price: 10.99, emoji: '👑'
+    id: 'p12', name: '10 days Premium',     price: 10.99,  image: 'premium',       emoji: '👑'
   }
 ];
 
 let activeFilter = 'all';
-let searchQuery = '';
 
 function getFilteredProducts() {
   return PRODUCTS.filter((p) => {
     if (activeFilter === 'limited' && p.badge !== 'limited') return false;
     if (activeFilter === 'popular' && p.badge !== 'popular') return false;
-    if (searchQuery && !p.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
 }
@@ -64,7 +54,7 @@ function renderCatalog() {
   const products = getFilteredProducts();
 
   if (products.length === 0) {
-    grid.innerHTML = '<p style="color:var(--text-muted);padding:2rem">No items found.</p>';
+    grid.innerHTML = '<p style="color:var(--text-muted);padding:2rem;grid-column:1/-1">No items found.</p>';
     return;
   }
 
@@ -76,16 +66,14 @@ function renderCatalog() {
     if (p.bonus)  tags.push(`<span class="tag tag-blue">${p.bonus}</span>`);
     const tagsHtml = tags.length ? `<div class="card-tags">${tags.join('')}</div>` : '';
 
-    const multiplierHtml = p.multiplier
-      ? `<div class="card-multiplier">${p.multiplier}</div>`
-      : '';
-
     return `
-      <article class="product-card" onclick="addToCart('${p.id}','${p.name}',${p.price})">
+      <article class="product-card" onclick="showToast('${p.name} — buy coming soon')">
         <div class="card-cover">
-          <span>${p.emoji}</span>
+          <img class="card-img" src="/images/${p.image}.png" alt=""
+               onload="this.nextElementSibling.style.display='none'"
+               onerror="this.style.display='none'">
+          <span class="card-emoji">${p.emoji}</span>
           ${tagsHtml}
-          ${multiplierHtml}
         </div>
         <div class="card-body">
           <div class="card-name">${p.name}</div>
@@ -111,12 +99,4 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.tag-btn').forEach((btn) => {
     btn.addEventListener('click', () => setFilter(btn.dataset.filter));
   });
-
-  const searchInput = document.getElementById('search-input');
-  if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
-      searchQuery = e.target.value;
-      renderCatalog();
-    });
-  }
 });

@@ -18,7 +18,12 @@
 <body>
 
 <header>
-  <a href="/" class="header-logo">Market</a>
+  <a href="/" class="header-logo">
+    <img src="/images/showcase_logo.png" class="header-logo-img" alt="Market"
+         onload="this.nextElementSibling.style.display='none'"
+         onerror="this.style.display='none'">
+    <span class="header-logo-text">Market</span>
+  </a>
   <nav class="header-nav">
     <a href="/" class="nav-link active">Home</a>
     <a href="#" class="nav-link">Games</a>
@@ -27,8 +32,7 @@
     <a href="#" class="nav-link">About</a>
   </nav>
   <div class="header-actions">
-    <a href="/cart.html" id="cart-link">🛒 Cart <span id="cart-badge">0</span></a>
-    <button id="install-btn" hidden>⬇ Install Launcher</button>
+    <button id="install-btn" class="btn btn-primary" hidden>⬇ Install Launcher</button>
   </div>
 </header>
 
@@ -44,7 +48,6 @@
       <option>Price: low to high</option>
       <option>Price: high to low</option>
     </select>
-    <input id="search-input" type="search" placeholder="🔍 Search">
   </div>
 </div>
 
