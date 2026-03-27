@@ -10,28 +10,35 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// ── INSTALL PROMPT ────────────────────────────────────────────────────────────
+// ── INSTALL BANNER ────────────────────────────────────────────────────────────
 let deferredInstallPrompt = null;
+const installBanner = document.getElementById('install-banner');
+const installBtn    = document.getElementById('install-btn');
+const installClose  = document.getElementById('install-close');
 
 window.addEventListener('beforeinstallprompt', (event) => {
   event.preventDefault();
   deferredInstallPrompt = event;
-  const installBtn = document.getElementById('install-btn');
-  if (installBtn) installBtn.hidden = false;
+  if (installBanner) installBanner.hidden = false;
 });
 
-document.getElementById('install-btn')?.addEventListener('click', async () => {
+installBtn?.addEventListener('click', async () => {
   if (!deferredInstallPrompt) return;
   deferredInstallPrompt.prompt();
   const { outcome } = await deferredInstallPrompt.userChoice;
   console.log('Install prompt outcome:', outcome);
   deferredInstallPrompt = null;
-  document.getElementById('install-btn').hidden = true;
+  if (installBanner) installBanner.hidden = true;
+});
+
+installClose?.addEventListener('click', () => {
+  if (installBanner) installBanner.hidden = true;
 });
 
 window.addEventListener('appinstalled', () => {
   console.log('App installed');
   deferredInstallPrompt = null;
+  if (installBanner) installBanner.hidden = true;
 });
 
 // ── PUSH BUTTON WIRING ────────────────────────────────────────────────────────

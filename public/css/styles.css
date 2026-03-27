@@ -482,6 +482,80 @@ a.btn-primary, button.btn-primary {
 .status-processing { background: rgba(249,115,22,0.15); color: #fb923c; }
 .status-delivered  { background: rgba(0,90,255,0.15);   color: #005aff; }
 
+/* ── INSTALL BANNER ──────────────────────────────────────────────────── */
+#install-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.5);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.install-banner-logo {
+  height: 40px;
+  width: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.install-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+.install-banner-text strong {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.install-banner-text span {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.install-banner-btn {
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  padding: 0 20px;
+  height: 38px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.install-banner-btn:hover { background: var(--primary-dark); }
+
+.install-banner-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  flex-shrink: 0;
+  transition: color 0.15s;
+  line-height: 1;
+}
+.install-banner-close:hover { color: var(--text); }
+
 /* ── TOAST ───────────────────────────────────────────────────────────── */
 button { font-family: inherit; }
 

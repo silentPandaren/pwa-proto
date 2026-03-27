@@ -31,9 +31,7 @@
     <a href="#" class="nav-link">Market</a>
     <a href="#" class="nav-link">About</a>
   </nav>
-  <div class="header-actions">
-    <button id="install-btn" class="btn btn-primary" hidden>⬇ Install Launcher</button>
-  </div>
+  <div class="header-actions"></div>
 </header>
 
 <div class="filter-section">
@@ -58,6 +56,16 @@
 <div id="push-controls">
   <button id="subscribe-btn">🔔 Enable Notifications</button>
   <button id="unsubscribe-btn" hidden>🔕 Disable Notifications</button>
+</div>
+
+<div id="install-banner" hidden>
+  <img src="/images/showcase_logo.png" class="install-banner-logo" alt="">
+  <div class="install-banner-text">
+    <strong>Play without limits</strong>
+    <span>Install the app — no browser, instant access</span>
+  </div>
+  <button class="install-banner-btn" id="install-btn">Install</button>
+  <button class="install-banner-close" id="install-close" aria-label="Close">✕</button>
 </div>
 
 <div id="toast"></div>
