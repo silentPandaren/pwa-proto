@@ -17,7 +17,8 @@ const installBtn    = document.getElementById('install-btn');
 const installClose  = document.getElementById('install-close');
 
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
-const isStandalone = window.navigator.standalone === true;
+const isStandalone = window.navigator.standalone === true
+  || window.matchMedia('(display-mode: standalone)').matches;
 
 // iOS: show banner immediately (no beforeinstallprompt on iOS)
 if (isIOS && !isStandalone) {
@@ -27,7 +28,7 @@ if (isIOS && !isStandalone) {
 window.addEventListener('beforeinstallprompt', (event) => {
   event.preventDefault();
   deferredInstallPrompt = event;
-  if (installBanner) installBanner.hidden = false;
+  if (!isStandalone && installBanner) installBanner.hidden = false;
 });
 
 installBtn?.addEventListener('click', async () => {
