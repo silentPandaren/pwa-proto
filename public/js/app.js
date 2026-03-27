@@ -18,7 +18,8 @@ const installClose  = document.getElementById('install-close');
 
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
 const isStandalone = window.navigator.standalone === true
-  || window.matchMedia('(display-mode: standalone)').matches;
+  || window.matchMedia('(display-mode: standalone)').matches
+  || new URLSearchParams(window.location.search).get('source') === 'pwa';
 
 // iOS: show banner immediately (no beforeinstallprompt on iOS)
 if (isIOS && !isStandalone) {

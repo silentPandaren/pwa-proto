@@ -2,7 +2,7 @@
   "name": "PWA Webshop",
   "short_name": "Webshop",
   "description": "A minimal PWA webshop prototype",
-  "start_url": "/",
+  "start_url": "/?source=pwa",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#0e0e10",
