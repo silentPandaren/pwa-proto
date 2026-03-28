@@ -584,14 +584,16 @@ a.btn-primary, button.btn-primary {
 
 .ios-share-icon {
   display: inline-block;
-  font-family: -apple-system, sans-serif;
-  font-size: 1.1rem;
+  width: 16px;
+  height: 16px;
   vertical-align: middle;
-  margin: 0 2px;
+  margin: 0 3px;
+  flex-shrink: 0;
 }
 
-/* ── INSTALL BANNER ──────────────────────────────────────────────────── */
-#install-banner {
+/* ── INSTALL BANNER + PUSH BANNER ────────────────────────────────────── */
+#install-banner,
+#push-banner {
   position: fixed;
   bottom: 0;
   left: 0;
