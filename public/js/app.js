@@ -86,11 +86,20 @@ pushAllowBtn?.addEventListener('click', async () => {
   try {
     await loadVapidKey();
     const sub = await subscribeToPush();
-    if (sub) showToast('Notifications enabled');
-  } catch {
-    showToast('Could not enable notifications');
+    if (sub) {
+      showToast('Notifications enabled');
+      if (pushBanner) pushBanner.hidden = true;
+    } else {
+      // subscribeToPush already showed a toast with the reason
+      pushAllowBtn.disabled = false;
+      pushAllowBtn.textContent = 'Allow';
+    }
+  } catch (err) {
+    console.error('[push] Unexpected error:', err);
+    showToast('Error: ' + (err.message || 'Could not enable notifications'));
+    pushAllowBtn.disabled = false;
+    pushAllowBtn.textContent = 'Allow';
   }
-  if (pushBanner) pushBanner.hidden = true;
 });
 
 pushLaterBtn?.addEventListener('click', () => {
